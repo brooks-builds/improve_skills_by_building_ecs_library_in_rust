@@ -2,11 +2,26 @@ use improve_skills_by_building_ecs_library_in_rust::World;
 
 #[test]
 fn create_and_get_resource_immutably() {
-    let mut world = World::new();
-
-    world.add_resource(FpsResource(60));
+    let world = initialize_world();
     let fps = world.get_resource::<FpsResource>().unwrap();
     assert_eq!(fps.0, 60)
+}
+
+#[test]
+fn get_resources_mutably() {
+    let mut world = initialize_world();
+    {
+        let fps: &mut FpsResource = world.get_resource_mut::<FpsResource>().unwrap();
+        fps.0 += 1;
+    }
+    let fps = world.get_resource::<FpsResource>().unwrap();
+    assert_eq!(fps.0, 61);
+}
+
+fn initialize_world() -> World {
+    let mut world = World::new();
+    world.add_resource(FpsResource(60));
+    world
 }
 
 #[derive(Debug)]
