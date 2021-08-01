@@ -8,6 +8,8 @@ use std::{
 
 use eyre::{bail, Result};
 
+use crate::custom_errors::CustomErrors;
+
 #[derive(Debug, Default)]
 pub struct Entities {
     components: HashMap<TypeId, Vec<Option<Rc<RefCell<dyn Any>>>>>,
@@ -28,10 +30,12 @@ impl Entities {
     pub fn with_component(&mut self, data: impl Any) -> Result<&mut Self> {
         let type_id = data.type_id();
         if let Some(components) = self.components.get_mut(&type_id) {
-            let last_component = components.last_mut().ok_or_else(|| "test").unwrap();
+            let last_component = components
+                .last_mut()
+                .ok_or(CustomErrors::CreateComponentNeverCalled)?;
             *last_component = Some(Rc::new(RefCell::new(data)));
         } else {
-            bail!("attempted to insert data for component that wasn't registered");
+            return Err(CustomErrors::ComponentNotRegistered.into());
         }
         Ok(self)
     }

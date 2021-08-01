@@ -3,6 +3,7 @@ use std::any::Any;
 use entities::Entities;
 use resource::Resource;
 
+pub mod custom_errors;
 mod entities;
 mod resource;
 
