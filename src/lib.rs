@@ -75,7 +75,7 @@ impl World {
     }
 
     pub fn query(&self) -> Query {
-        Query::new()
+        Query::new(&self.entities)
     }
 }
 
