@@ -59,9 +59,10 @@ fn query_for_entities() -> Result<()> {
     let borrowed_second_location = locations[1].borrow();
     let second_location = borrowed_second_location.downcast_ref::<Location>().unwrap();
     assert_eq!(second_location.0, 44.0);
-    let borrowed_second_size = sizes[1].borrow();
-    let second_size = borrowed_second_size.downcast_ref::<Size>().unwrap();
-    assert_eq!(second_size.0, 12.0);
+    let mut borrowed_second_size = sizes[1].borrow_mut();
+    let second_size = borrowed_second_size.downcast_mut::<Size>().unwrap();
+    second_size.0 += 1.0;
+    assert_eq!(second_size.0, 13.0);
 
     Ok(())
 }
