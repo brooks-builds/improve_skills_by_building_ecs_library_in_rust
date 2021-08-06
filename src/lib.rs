@@ -86,6 +86,10 @@ impl World {
     pub fn add_component_to_entity_by_id(&mut self, data: impl Any, index: usize) -> Result<()> {
         self.entities.add_component_by_entity_id(data, index)
     }
+
+    pub fn delete_entity_by_id(&mut self, index: usize) -> Result<()> {
+        self.entities.delete_entity_by_id(index)
+    }
 }
 
 #[cfg(test)]

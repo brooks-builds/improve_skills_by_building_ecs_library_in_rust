@@ -117,5 +117,34 @@ fn add_component_to_entity() -> Result<()> {
     Ok(())
 }
 
+#[test]
+#[allow(clippy::float_cmp)]
+fn deleting_an_entity() -> Result<()> {
+    let mut world = World::new();
+    world.register_component::<Location>();
+    world.register_component::<Size>();
+    world.create_entity().with_component(Location(10.0, 15.0))?;
+    world.create_entity().with_component(Location(20.0, 25.0))?;
+
+    world.delete_entity_by_id(0)?;
+
+    let query = world.query().with_component::<Location>()?.run();
+
+    assert_eq!(query.0.len(), 1);
+
+    let borrowed_location = query.1[0][0].borrow();
+    let location = borrowed_location.downcast_ref::<Location>().unwrap();
+
+    assert_eq!(location.0, 20.0);
+
+    world.create_entity().with_component(Location(30.0, 35.0))?;
+    let query = world.query().with_component::<Location>()?.run();
+    let borrowed_location = query.1[0][0].borrow();
+    let location = borrowed_location.downcast_ref::<Location>().unwrap();
+    assert_eq!(location.0, 30.0);
+
+    Ok(())
+}
+
 struct Location(pub f32, pub f32);
 struct Size(pub f32);
