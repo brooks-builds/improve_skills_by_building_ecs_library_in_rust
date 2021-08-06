@@ -98,5 +98,24 @@ fn deleted_component_from_entity() -> Result<()> {
     Ok(())
 }
 
+#[test]
+fn add_component_to_entity() -> Result<()> {
+    let mut world = World::new();
+    world.register_component::<Location>();
+    world.register_component::<Size>();
+    world.create_entity().with_component(Location(10.0, 15.0))?;
+
+    world.add_component_to_entity_by_id(Size(20.0), 0)?;
+
+    let query = world
+        .query()
+        .with_component::<Location>()?
+        .with_component::<Size>()?
+        .run();
+    assert_eq!(query.0.len(), 1);
+
+    Ok(())
+}
+
 struct Location(pub f32, pub f32);
 struct Size(pub f32);
