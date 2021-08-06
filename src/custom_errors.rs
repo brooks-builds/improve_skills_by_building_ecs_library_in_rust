@@ -4,6 +4,6 @@ use thiserror::Error;
 pub enum CustomErrors {
     #[error("Attempting to add component to an entity without calling create component first")]
     CreateComponentNeverCalled,
-    #[error("attempting to use a component that wasn't registered")]
+    #[error("attempting to reference a component that wasn't registered")]
     ComponentNotRegistered,
 }

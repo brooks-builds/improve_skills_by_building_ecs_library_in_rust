@@ -57,6 +57,19 @@ impl Entities {
     pub fn get_bitmask(&self, type_id: &TypeId) -> Option<u32> {
         self.bit_masks.get(type_id).copied()
     }
+
+    pub fn delete_component_by_entity_id<T: Any>(&mut self, index: usize) -> Result<()> {
+        let type_id = TypeId::of::<T>();
+        let mask = if let Some(mask) = self.bit_masks.get(&type_id) {
+            mask
+        } else {
+            return Err(CustomErrors::ComponentNotRegistered.into());
+        };
+
+        self.map[index] ^= *mask;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -133,6 +146,22 @@ mod test {
         entities.create_entity().with_component(Speed(15))?;
         let entity_map = entities.map[1];
         assert_eq!(entity_map, 2);
+        Ok(())
+    }
+
+    #[test]
+    fn delete_component_by_entity_id() -> Result<()> {
+        let mut entities = Entities::default();
+        entities.register_component::<Health>();
+        entities.register_component::<Speed>();
+        entities
+            .create_entity()
+            .with_component(Health(100))?
+            .with_component(Speed(50))?;
+
+        entities.delete_component_by_entity_id::<Health>(0)?;
+
+        assert_eq!(entities.map[0], 2);
         Ok(())
     }
 

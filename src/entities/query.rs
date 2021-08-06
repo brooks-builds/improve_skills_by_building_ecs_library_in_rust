@@ -37,7 +37,7 @@ impl<'a> Query<'a> {
         Ok(self)
     }
 
-    pub fn run(&self) -> Vec<Vec<Rc<RefCell<dyn Any>>>> {
+    pub fn run(&self) -> (Vec<usize>, Vec<Vec<Rc<RefCell<dyn Any>>>>) {
         let indexes: Vec<usize> = self
             .entities
             .map
@@ -62,7 +62,7 @@ impl<'a> Query<'a> {
             result.push(components_to_keep);
         }
 
-        result
+        (indexes, result)
     }
 }
 
@@ -108,10 +108,11 @@ mod test {
         query.with_component::<u32>()?.with_component::<f32>()?;
 
         let query_result = query.run();
-        let u32s = &query_result[0];
-        let f32s = &query_result[1];
+        let u32s = &query_result.1[0];
+        let f32s = &query_result.1[1];
+        let indexes = &query_result.0;
 
-        assert_eq!(u32s.len(), f32s.len());
+        assert!(u32s.len() == f32s.len() && u32s.len() == indexes.len());
         assert_eq!(u32s.len(), 2);
 
         let borrowed_first_u32 = u32s[0].borrow();
@@ -129,6 +130,9 @@ mod test {
         let borrowed_second_f32 = f32s[1].borrow();
         let second_f32 = borrowed_second_f32.downcast_ref::<f32>().unwrap();
         assert_eq!(*second_f32, 25.0);
+
+        assert_eq!(indexes[0], 0);
+        assert_eq!(indexes[1], 3);
 
         Ok(())
     }

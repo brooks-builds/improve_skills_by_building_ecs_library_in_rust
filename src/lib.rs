@@ -1,6 +1,7 @@
 use std::any::Any;
 
 use entities::{query::Query, Entities};
+use eyre::Result;
 use resource::Resource;
 
 pub mod custom_errors;
@@ -76,6 +77,10 @@ impl World {
 
     pub fn query(&self) -> Query {
         Query::new(&self.entities)
+    }
+
+    pub fn delete_component_by_entity_id<T: Any>(&mut self, index: usize) -> Result<()> {
+        self.entities.delete_component_by_entity_id::<T>(index)
     }
 }
 
