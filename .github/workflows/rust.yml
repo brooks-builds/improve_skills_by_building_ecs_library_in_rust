@@ -2,20 +2,21 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Run tests
-      run: cargo test
-    - name: Build
-      run: cargo build --release
-
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: cargo test
+      - name: Build
+        run: cargo build --release
+      - uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}

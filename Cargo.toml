@@ -1,6 +1,6 @@
 [package]
 name = "bbecs_tutorial"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2018"
 description = "An ECS library made for a tutorial."
 license = "MIT"
