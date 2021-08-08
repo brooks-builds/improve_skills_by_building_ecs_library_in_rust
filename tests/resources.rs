@@ -1,4 +1,4 @@
-use improve_skills_by_building_ecs_library_in_rust::World;
+use bbecs_tutorial::World;
 
 #[test]
 fn create_and_get_resource_immutably() {

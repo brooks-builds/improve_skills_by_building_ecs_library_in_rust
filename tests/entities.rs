@@ -1,7 +1,7 @@
 use std::{any::Any, cell::RefCell, rc::Rc};
 
+use bbecs_tutorial::World;
 use eyre::Result;
-use improve_skills_by_building_ecs_library_in_rust::World;
 
 #[test]
 fn create_entity() -> Result<()> {

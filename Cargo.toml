@@ -1,5 +1,5 @@
 [package]
-name = "improve_skills_by_building_ecs_library_in_rust"
+name = "bbecs_tutorial"
 version = "0.1.0"
 edition = "2018"
 
