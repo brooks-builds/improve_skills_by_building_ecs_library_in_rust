@@ -45,6 +45,7 @@ impl Entities {
                 .for_each(|(_key, components)| components.push(None));
 
             self.map.push(0);
+            self.inserting_into_index = self.map.len() - 1;
         }
 
         self
