@@ -1,14 +1,13 @@
-use std::{
-    any::{Any, TypeId},
-    cell::RefCell,
-    rc::Rc,
-};
+use std::any::{Any, TypeId};
 
 use eyre::Result;
 
 use crate::custom_errors::CustomErrors;
 
-use super::Entities;
+use super::{Component, Entities};
+
+pub type QueryIndexes = Vec<usize>;
+pub type QueryComponents = Vec<Vec<Component>>;
 
 #[derive(Debug)]
 pub struct Query<'a> {
@@ -37,7 +36,7 @@ impl<'a> Query<'a> {
         Ok(self)
     }
 
-    pub fn run(&self) -> (Vec<usize>, Vec<Vec<Rc<RefCell<dyn Any>>>>) {
+    pub fn run(&self) -> (QueryIndexes, QueryComponents) {
         let indexes: Vec<usize> = self
             .entities
             .map
