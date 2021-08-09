@@ -5,7 +5,7 @@ fn any_trait() {
     let u32s = FavoriteThings {
         thing: Box::new(10_u32),
     };
-    let floats = FavoriteThings {
+    let _floats = FavoriteThings {
         thing: Box::new(50.0_f32),
     };
 

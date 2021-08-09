@@ -2,18 +2,14 @@ use std::ops::Deref;
 
 #[test]
 
-// struct
-// tuple struct
-// anonymous structs
-
 fn structs() {
     let mut player_health = Health(100);
-    let enemy_health = Health::new(100);
+    let _enemy_health = Health::new(100);
 
     player_health.lose_health(10);
     player_health.print_health();
 
-    let ice_cream = FavoriteFood::IceCream {
+    let _ice_cream = FavoriteFood::IceCream {
         topping: "Nothing".to_owned(),
         scoops: 1,
         flavor: "Space Junkie".to_owned(),
@@ -44,6 +40,7 @@ impl Deref for Health {
     }
 }
 
+#[allow(dead_code)]
 enum FavoriteFood {
     Hamburger,
     HotDog,
