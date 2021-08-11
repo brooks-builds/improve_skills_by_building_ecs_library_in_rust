@@ -6,4 +6,5 @@ mod hash_maps;
 mod options;
 mod printing;
 mod structs;
+mod tuples;
 mod type_id;
