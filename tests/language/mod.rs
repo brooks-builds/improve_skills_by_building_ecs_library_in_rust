@@ -1,4 +1,5 @@
 mod any;
+mod boxes;
 mod default;
 mod generics;
 mod hash_maps;
