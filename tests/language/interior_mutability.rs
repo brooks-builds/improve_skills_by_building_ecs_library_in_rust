@@ -10,7 +10,7 @@ fn interior_mutability() {
 }
 
 fn add_one(wrapped_number: Rc<RefCell<u32>>) {
-    let cloned_number = {
+    let _cloned_number = {
         let other_borrowed_number = wrapped_number.borrow();
         *other_borrowed_number
     };
