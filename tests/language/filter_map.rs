@@ -1,5 +1,3 @@
-use core::num;
-
 #[test]
 pub fn filter_map() {
     let mut numbers = vec![];
