@@ -135,4 +135,18 @@ mod test {
 
         Ok(())
     }
+
+    #[test]
+    fn run_query_with_no_components() -> Result<()> {
+        let mut entities = Entities::default();
+        entities.register_component::<u32>();
+        entities.create_entity().with_component(10_u32)?;
+        entities.create_entity();
+        let mut query = Query::new(&entities);
+        query.with_component::<u32>()?;
+        let query_result = query.run();
+        let u32s = &query_result.1[0];
+        assert_eq!(u32s.len(), 1);
+        Ok(())
+    }
 }
