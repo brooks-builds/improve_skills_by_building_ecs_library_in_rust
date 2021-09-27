@@ -149,4 +149,21 @@ mod test {
         assert_eq!(u32s.len(), 1);
         Ok(())
     }
+
+    #[test]
+    fn query_after_deleting_entity() -> Result<()> {
+        let mut entities = Entities::default();
+        entities.register_component::<u32>();
+        entities.create_entity().with_component(10_u32)?;
+        entities.create_entity().with_component(20_u32)?;
+        entities.delete_entity_by_id(1)?;
+        let (query_indexes, query_results) = Query::new(&entities).with_component::<u32>()?.run();
+        assert_eq!(query_indexes.len(), query_results.len());
+        assert_eq!(query_results[0].len(), 1);
+        assert_eq!(query_indexes[0], 0);
+        let borrowed_first_u32 = query_results[0][0].borrow();
+        let first_u32 = borrowed_first_u32.downcast_ref::<u32>().unwrap();
+        assert_eq!(*first_u32, 10);
+        Ok(())
+    }
 }
