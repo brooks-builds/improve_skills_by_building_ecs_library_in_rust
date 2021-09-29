@@ -8,4 +8,6 @@ pub enum CustomErrors {
     ComponentNotRegistered,
     #[error("attempting to reference an entity that doesn't exist")]
     EntityDoesNotExist,
+    #[error("type of component doesn't match what we queried for")]
+    QueryTypeMismatch,
 }

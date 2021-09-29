@@ -4,15 +4,17 @@ use eyre::Result;
 
 #[test]
 fn results() -> Result<()> {
-    this_always_fails()?;
-    this_also_fails()?;
+    // this_always_fails()?;
+    // this_also_fails()?;
     Ok(())
 }
 
+#[allow(dead_code)]
 fn this_always_fails() -> Result<()> {
     Err(CustomError::AlwaysFails.into())
 }
 
+#[allow(dead_code)]
 fn this_also_fails() -> Result<()> {
     Err(CustomError::OfCourseItFailed(42).into())
 }

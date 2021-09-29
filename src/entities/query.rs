@@ -2,9 +2,8 @@ use std::any::{Any, TypeId};
 
 use eyre::Result;
 
+use super::{query_entity::QueryEntity, Component, Entities};
 use crate::custom_errors::CustomErrors;
-
-use super::{Component, Entities};
 
 pub type QueryIndexes = Vec<usize>;
 pub type QueryComponents = Vec<Vec<Component>>;
@@ -67,10 +66,9 @@ impl<'a> Query<'a> {
 
 #[cfg(test)]
 mod test {
+    use super::*;
     use core::f32;
     use std::u32;
-
-    use super::*;
 
     #[test]
     fn query_mask_updating_with_component() -> Result<()> {
@@ -166,4 +164,69 @@ mod test {
         assert_eq!(*first_u32, 10);
         Ok(())
     }
+
+    // Suggestion from community member SOS (https://github.com/00sos00)
+
+    // I think i found the best way to write the querying system, so instead of making the Query struct
+    // return components, we will make it return only entities that have the components we specified,
+    // and then on the Entities struct we are gonna have these 2 methods
+
+    // ```
+    // fn get_component<T: Any>(&self, entity_id: usize) -> Ref<T> {
+    //     Ref::map(self.components[id].as_ref().unwrap().borrow(), |x| {
+    //         x.downcast_ref::<T>().unwrap()
+    //     })
+    // }
+
+    // fn get_component_mut<T: Any>(&self, entity_id: usize) -> RefMut<T> {
+    //     RefMut::map(self.components[id].as_ref().unwrap().borrow_mut(), |x| {
+    //         x.downcast_mut::<T>().unwrap()
+    //     })
+    // }
+    // ```
+    // #[test]
+    // fn return_entity_alternative_ref() -> Result<()> {
+    //     let mut entities = Entities::default();
+    //     entities.register_component::<u32>();
+    //     entities.register_component::<f32>();
+    //     entities.create_entity().with_component(10_u32)?;
+    //     entities.create_entity().with_component(15_f32)?;
+    //     let mut query = Query::new(&entities);
+    //     let query: Vec<QueryEntity> = query.with_component::<u32>()?.run_entity();
+    //     assert_eq!(query.len(), 1);
+    //     for entity in query {
+    //         assert_eq!(entity.id, 0);
+    //         let health = entity.get_component::<u32>()?;
+    //         assert_eq!(*health, 10);
+    //     }
+    //     Ok(())
+    // }
+
+    // #[test]
+    // fn return_entity_alternative_mut() -> Result<()> {
+    //     let mut entities = Entities::default();
+    //     entities.register_component::<u32>();
+    //     entities.register_component::<f32>();
+    //     entities.create_entity().with_component(10_u32)?;
+    //     entities.create_entity().with_component(15_f32)?;
+    //     let mut query = Query::new(&entities);
+    //     let query: Vec<QueryEntity> = query.with_component::<u32>()?.run_entity();
+    //     assert_eq!(query.len(), 1);
+    //     for entity in query {
+    //         assert_eq!(entity.id, 0);
+    //         let mut health = entity.get_component_mut::<u32>()?;
+    //         assert_eq!(*health, 10);
+    //         *health += 1;
+    //     }
+
+    //     let mut query = Query::new(&entities);
+    //     let query: Vec<QueryEntity> = query.with_component::<u32>()?.run_entity();
+    //     assert_eq!(query.len(), 1);
+    //     for entity in query {
+    //         assert_eq!(entity.id, 0);
+    //         let health = entity.get_component::<u32>()?;
+    //         assert_eq!(*health, 11);
+    //     }
+    //     Ok(())
+    // }
 }

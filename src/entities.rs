@@ -1,4 +1,5 @@
 pub mod query;
+pub mod query_entity;
 
 use std::{
     any::{Any, TypeId},
