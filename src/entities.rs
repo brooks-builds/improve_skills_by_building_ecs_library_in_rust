@@ -81,7 +81,9 @@ impl Entities {
             return Err(CustomErrors::ComponentNotRegistered.into());
         };
 
-        self.map[index] ^= *mask;
+        if self.has_component(index, *mask) {
+            self.map[index] ^= *mask;
+        }
 
         Ok(())
     }
@@ -108,6 +110,10 @@ impl Entities {
             return Err(CustomErrors::EntityDoesNotExist.into());
         }
         Ok(())
+    }
+
+    fn has_component(&self, index: usize, mask: u32) -> bool {
+        self.map[index] & mask == mask
     }
 }
 
@@ -253,6 +259,21 @@ mod test {
         let health = borrowed_health.downcast_ref::<Health>().unwrap();
 
         assert_eq!(health.0, 25);
+        Ok(())
+    }
+
+    #[test]
+    fn should_not_add_component_back_after_deleting_twice() -> Result<()> {
+        let mut entities = Entities::default();
+        entities.register_component::<u32>();
+        entities.register_component::<f32>();
+        entities
+            .create_entity()
+            .with_component(100_u32)?
+            .with_component(50.0_f32)?;
+        entities.delete_component_by_entity_id::<u32>(0)?;
+        entities.delete_component_by_entity_id::<u32>(0)?;
+        assert_eq!(entities.map[0], 2);
         Ok(())
     }
 
