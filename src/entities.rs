@@ -277,6 +277,46 @@ mod test {
         Ok(())
     }
 
+    /*
+       Brendon Stanton
+           When you create your second component, inserting_into_index never changes
+           from 0.  So when you get to with_component, Health(50) overwrites Health(100)
+           and column 1 in your table never actually gets used.
+    */
+    #[test]
+    fn inserting_into_index_should_change_when_adding_components() -> Result<()> {
+        let mut entities = Entities::default();
+        entities.register_component::<f32>();
+        entities.register_component::<u32>();
+
+        // Inserting an entity with 2 components to make sure that inserting_into_index is correct
+        let creating_entity = entities.create_entity();
+        assert_eq!(creating_entity.inserting_into_index, 0);
+        creating_entity
+            .with_component(100.0_f32)?
+            .with_component(10_u32)?;
+        assert_eq!(entities.inserting_into_index, 0);
+
+        // Inserting another entity with 2 components to make sure that the inserting_into_index is now 1
+        let creating_entity = entities.create_entity();
+        assert_eq!(creating_entity.inserting_into_index, 1);
+        creating_entity
+            .with_component(110.0_f32)?
+            .with_component(20_u32)?;
+        assert_eq!(entities.inserting_into_index, 1);
+
+        // delete the first entity, and re-create to make sure that inserting_into_index is back
+        // to 0 again
+        entities.delete_entity_by_id(0)?;
+        let creating_entity = entities.create_entity();
+        assert_eq!(creating_entity.inserting_into_index, 0);
+        creating_entity
+            .with_component(100.0_f32)?
+            .with_component(10_u32)?;
+        assert_eq!(entities.inserting_into_index, 0);
+        Ok(())
+    }
+
     struct Health(pub u32);
     struct Speed(pub u32);
 }
