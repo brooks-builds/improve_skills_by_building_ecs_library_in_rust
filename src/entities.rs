@@ -27,9 +27,8 @@ pub struct Entities {
 impl Entities {
     pub fn register_component<T: Any + 'static>(&mut self) {
         let type_id = TypeId::of::<T>();
-        let bit_mask = 2u32.pow(self.bit_masks.len() as u32);
         self.components.insert(type_id, vec![]);
-        self.bit_masks.insert(type_id, bit_mask);
+        self.bit_masks.insert(type_id, 1 << self.bit_masks.len());
     }
 
     pub fn create_entity(&mut self) -> &mut Self {
